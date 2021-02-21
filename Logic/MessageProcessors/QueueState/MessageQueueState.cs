@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Threading;
 
 namespace Logic.MessageProcessors.QueueState
 {
@@ -7,19 +8,17 @@ namespace Logic.MessageProcessors.QueueState
     /// </summary>
     public class MessageQueueState : INewMessageInformer, INewMessageReceiver
     {
-        private readonly ConcurrentQueue<bool> _queue = new();
+        private int _wasAdded = 0;
 
         public void MessageWasAdded()
         {
-            _queue.Enqueue(true);
+            Interlocked.Exchange(ref _wasAdded, 1);
         }
 
         public bool WasNewMessage()
         {
-            if (_queue.TryDequeue(out bool _))
+            if (Interlocked.CompareExchange(ref _wasAdded, 0, 1)==1)
             {
-                _queue.Clear();
-
                 return true;
             }
 
