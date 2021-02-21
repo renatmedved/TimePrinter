@@ -3,6 +3,7 @@ using DAL.Redis.Implementations;
 
 using Logic.DALAbstractions;
 using Logic.MessageProcessors;
+using Logic.MessageProcessors.QueueState;
 using Logic.Options;
 using Logic.PrintAbstractions;
 
@@ -90,6 +91,11 @@ namespace TimePrinter
         {
             services.AddSingleton<MessageSaver>()
                 .AddSingleton<PrintJob>();
+
+            MessageQueueState messageQueueState = new();
+
+            services.AddSingleton<INewMessageInformer>(messageQueueState)
+                .AddSingleton<INewMessageReceiver>(messageQueueState);
         }
 
 
