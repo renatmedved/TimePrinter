@@ -8,18 +8,20 @@ namespace Logic.MessageProcessors
 {
     public class MessageSaver
     {
-        private readonly IMessageWriter _writer;
+        private readonly IDALServicesMaker _dalServicesMaker;
         private readonly INewMessageInformer _newMessageInformer;
 
-        public MessageSaver(IMessageWriter writer, INewMessageInformer newMessageInformer)
+        public MessageSaver(IDALServicesMaker dalServicesMaker, INewMessageInformer newMessageInformer)
         {
-            _writer = writer;
+            _dalServicesMaker = dalServicesMaker;
             _newMessageInformer = newMessageInformer;
         }
 
         public async Task Write(Message message)
         {
-            await _writer.WriteInTimeQueue(message);
+            IMessageWriter writer = _dalServicesMaker.MakeWriter();
+
+            await writer.WriteInTimeQueue(message);
 
             _newMessageInformer.MessageWasAdded();
         }

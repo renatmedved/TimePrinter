@@ -11,12 +11,12 @@ namespace DAL.Redis.Implementations
 {
     public class MessageWriter : IMessageWriter
     {
-        private readonly RedisDBFactory _dbFactory;
+        private readonly RedisDB _db;
         private readonly RedisEntitiesNames _redisEntitiesNames;
 
-        public MessageWriter(RedisDBFactory dbFactory, RedisEntitiesNames redisEntitiesNames)
+        public MessageWriter(RedisDB db, RedisEntitiesNames redisEntitiesNames)
         {
-            _dbFactory = dbFactory;
+            _db = db;
             _redisEntitiesNames = redisEntitiesNames;
         }
 
@@ -25,16 +25,14 @@ namespace DAL.Redis.Implementations
         /// </summary>
         public async Task WriteInTimeQueue(Message message)
         {
-            using RedisDB db = _dbFactory.Make();
-
-            Sequence seq = db.CreateSequence(_redisEntitiesNames.MessagesThisHostSequence);
+            Sequence seq = _db.CreateSequence(_redisEntitiesNames.MessagesThisHostSequence);
 
             long ticks = message.Meta.Time.Ticks;
             string id = message.Meta.Id.ToString();
 
             await seq.ZAdd((ticks, id));
 
-            await db.Set(_redisEntitiesNames.GetMessageId(id), message.Text);
+            await _db.Set(_redisEntitiesNames.GetMessageId(id), message.Text);
         }
     }
 }

@@ -9,12 +9,12 @@ namespace DAL.Redis.Implementations
 {
     public class MessageCleaner : IMessageCleaner
     {
-        private readonly RedisDBFactory _dbFactory;
+        private readonly RedisDB _db;
         private readonly RedisEntitiesNames _redisEntitiesNames;
 
-        public MessageCleaner(RedisDBFactory dbFactory, RedisEntitiesNames redisEntitiesNames)
+        public MessageCleaner(RedisDB db, RedisEntitiesNames redisEntitiesNames)
         {
-            _dbFactory = dbFactory;
+            _db = db;
             _redisEntitiesNames = redisEntitiesNames;
         }
 
@@ -23,14 +23,12 @@ namespace DAL.Redis.Implementations
         /// </summary>
         public async Task CleanMessage(Guid guid)
         {
-            using RedisDB db = _dbFactory.Make();
-
             string id = guid.ToString();
 
-            Sequence seq = db.CreateSequence(_redisEntitiesNames.MessagesThisHostSequence);
+            Sequence seq = _db.CreateSequence(_redisEntitiesNames.MessagesThisHostSequence);
 
             await seq.ZRem(id);
-            await db.Del(_redisEntitiesNames.GetMessageId(id));
+            await _db.Del(_redisEntitiesNames.GetMessageId(id));
         }
     }
 }

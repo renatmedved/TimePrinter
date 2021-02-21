@@ -76,10 +76,9 @@ namespace TimePrinter
         private static void ConfigureDAL(IServiceCollection services)
         {
             services.AddSingleton<RedisEntitiesNames>()
-                .AddSingleton<RedisDBFactory>()
-                .AddSingleton<IMessageCleaner, MessageCleaner>()
-                .AddSingleton<IMessageReader, MessageReader>()
-                .AddSingleton<IMessageWriter, MessageWriter>();
+                .AddScoped<IDALServicesMaker, DALServicesMaker>()
+                .AddSingleton<IDBFactory, DBFactory>();
+
         }
 
         private static void ConfigurePrinters(IServiceCollection services)
@@ -89,7 +88,7 @@ namespace TimePrinter
 
         private static void ConfigureMessageProcessors(IServiceCollection services)
         {
-            services.AddSingleton<MessageSaver>()
+            services.AddScoped<MessageSaver>()
                 .AddSingleton<PrintJob>();
 
             MessageQueueState messageQueueState = new();

@@ -14,23 +14,19 @@ namespace Logic.MessageProcessors
     {
         private readonly PrintJobOptions _opts;
 
-        private readonly IMessageReader _messageReader;
-        private readonly IMessageCleaner _messageCleaner;
+        private readonly IDBFactory _dbFactory;
         private readonly IMessagePrinter _printer;
         private readonly INewMessageReceiver _newMessageReceiver;
 
         private DateTime _minDateTime;
 
         public PrintJob(PrintJobOptions opts, 
-            IMessageReader messageReader, 
-            IMessageCleaner messageCleaner,
+            IDBFactory dbFactory,
             IMessagePrinter printer,
             INewMessageReceiver newMessageReceiver)
         {
             _opts = opts;
-
-            _messageReader = messageReader;
-            _messageCleaner = messageCleaner;
+            _dbFactory = dbFactory;
             _printer = printer;
             _newMessageReceiver = newMessageReceiver;
         }
@@ -61,17 +57,22 @@ namespace Logic.MessageProcessors
         /// <returns>minimum time the next message or DateTime.MaxValue (if queue is empty)</returns>
         private async Task<DateTime> ProcessCurrentMessages()
         {
-            MessageMetaInformation meta = await _messageReader.ReadFirstMessageMeta();
+            using IDALServicesMaker servicesMaker = _dbFactory.Create();
+
+            IMessageReader messageReader = servicesMaker.MakeReader();
+
+            MessageMetaInformation meta = await messageReader.ReadFirstMessageMeta();
 
             while (meta != null && meta.Time <= DateTime.Now)
             {
-                string messageText = await _messageReader.ReadMessageText(meta.Id);
+                string messageText = await messageReader.ReadMessageText(meta.Id);
 
                 _printer.Print(messageText);
 
-                await _messageCleaner.CleanMessage(meta.Id);
+                IMessageCleaner messageCleaner = servicesMaker.MakeCleaner();
+                await messageCleaner.CleanMessage(meta.Id);
 
-                meta = await _messageReader.ReadFirstMessageMeta();
+                meta = await messageReader.ReadFirstMessageMeta();
             }
 
             return meta?.Time ?? DateTime.MaxValue;

@@ -12,12 +12,12 @@ namespace DAL.Redis.Implementations
 {
     public class MessageReader : IMessageReader
     {
-        private readonly RedisDBFactory _dbFactory;
+        private readonly RedisDB _db;
         private readonly RedisEntitiesNames _redisSequencesNames;
 
-        public MessageReader(RedisDBFactory dbFactory, RedisEntitiesNames redisSequencesNames)
+        public MessageReader(RedisDB db, RedisEntitiesNames redisSequencesNames)
         {
-            _dbFactory = dbFactory;
+            _db = db;
             _redisSequencesNames = redisSequencesNames;
         }
 
@@ -26,9 +26,7 @@ namespace DAL.Redis.Implementations
         /// </summary>
         public async Task<MessageMetaInformation> ReadFirstMessageMeta()
         {
-            using RedisDB db = _dbFactory.Make();
-
-            Sequence seq = db.CreateSequence(_redisSequencesNames.MessagesThisHostSequence);
+            Sequence seq = _db.CreateSequence(_redisSequencesNames.MessagesThisHostSequence);
 
             List<(double Score, string Member)> list = await seq.ZRange(0, 1, true);
 
@@ -47,9 +45,7 @@ namespace DAL.Redis.Implementations
 
         public async Task<string> ReadMessageText(Guid id)
         {
-            using RedisDB db = _dbFactory.Make();
-
-            string text = await db.Get<string>(_redisSequencesNames.GetMessageId(id));
+            string text = await _db.Get<string>(_redisSequencesNames.GetMessageId(id));
 
             return text;
         }
