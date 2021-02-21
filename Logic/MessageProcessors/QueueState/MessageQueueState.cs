@@ -18,6 +18,8 @@ namespace Logic.MessageProcessors.QueueState
         {
             if (_queue.TryDequeue(out bool _))
             {
+                _queue.Clear();
+
                 return true;
             }
 
