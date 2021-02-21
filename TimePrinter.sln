@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31005.135
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimePrinter", "TimePrinter\TimePrinter.csproj", "{7107C5A7-0126-4E7C-BBCA-8A63B5BEBF42}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logic", "Logic\Logic.csproj", "{6BB87532-4036-495A-A87B-C1A5F666BF92}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL.Redis", "DAL.Redis\DAL.Redis.csproj", "{92262497-C4B7-4FC8-A4DF-A0A89C72B702}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7107C5A7-0126-4E7C-BBCA-8A63B5BEBF42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7107C5A7-0126-4E7C-BBCA-8A63B5BEBF42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7107C5A7-0126-4E7C-BBCA-8A63B5BEBF42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7107C5A7-0126-4E7C-BBCA-8A63B5BEBF42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BB87532-4036-495A-A87B-C1A5F666BF92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BB87532-4036-495A-A87B-C1A5F666BF92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BB87532-4036-495A-A87B-C1A5F666BF92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BB87532-4036-495A-A87B-C1A5F666BF92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92262497-C4B7-4FC8-A4DF-A0A89C72B702}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92262497-C4B7-4FC8-A4DF-A0A89C72B702}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92262497-C4B7-4FC8-A4DF-A0A89C72B702}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92262497-C4B7-4FC8-A4DF-A0A89C72B702}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0DAD9E2A-1BCC-47AC-B853-AADB0ED860A9}
+	EndGlobalSection
+EndGlobal
